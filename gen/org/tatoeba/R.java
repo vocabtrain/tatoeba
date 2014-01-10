@@ -288,6 +288,7 @@ public final class R {
         public static final int lang_zsm=0x7f07007b;
         public static final int layout_button_accept=0x7f070027;
         public static final int layout_button_decline=0x7f070028;
+        public static final int layout_button_seelect_file=0x7f0700a3;
         public static final int layout_button_select_file=0x7f07002a;
         public static final int layout_directory_usage=0x7f070036;
         public static final int layout_download_label=0x7f070041;

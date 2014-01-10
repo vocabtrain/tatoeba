@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipEntry;
@@ -70,12 +71,13 @@ public class DownloadActivity extends FragmentActivity
 					final String alternative_url = download_path.getText().toString();
 					final URL url = new URL((alternative_url == null || alternative_url.length() == 0) ? ARCHIVE_URL : alternative_url);
 
-					final URLConnection connection = url.openConnection();
+					final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+					connection.setRequestMethod("GET"); 
 					connection.connect();
-
+					
 					archive_filesize = connection.getContentLength();
 
-					final InputStream input = new BufferedInputStream(url.openStream());
+					final InputStream input = new BufferedInputStream(connection.getInputStream());
 					final OutputStream output = new FileOutputStream(zipfile);
 
 					publishProgress(0);
@@ -85,7 +87,12 @@ public class DownloadActivity extends FragmentActivity
 						current_size_downloaded += count;
 						publishProgress((int) ((current_size_downloaded * 100.0) / archive_filesize));
 						output.write(buffer, 0, count);
-						if(isCancelled()) return null;
+						if(isCancelled()) 
+						{
+							output.close();
+							input.close();
+							return null;
+						}
 					}
 
 					output.flush();
@@ -100,14 +107,21 @@ public class DownloadActivity extends FragmentActivity
 				int filenumber = 0;
 				while((entry = zipInput.getNextEntry()) != null)
 				{
-					if(isCancelled()) return null;
+					if(isCancelled()) 
+					{
+						zipInput.close();
+						return null;
+					}
 					current_extracting_filename = directory + '/' + entry.getName();
 					publishProgress(++filenumber);
 					if(entry.isDirectory())
 					{
 						final File newDirectory = new File(current_extracting_filename);
 						if(!newDirectory.isDirectory() && !newDirectory.mkdirs())
+						{
+							zipInput.close();
 							throw new IOException(getString(R.string.error_directory_not_createable, newDirectory));
+						}
 					}
 					else
 					{
@@ -116,7 +130,12 @@ public class DownloadActivity extends FragmentActivity
 						while((count = zipInput.read(buffer)) != -1)
 						{
 							fileOutput.write(buffer, 0, count);
-							if(isCancelled()) return null;
+							if(isCancelled())
+							{
+								fileOutput.close();
+								zipInput.close();
+								return null;
+							}
 						}
 						fileOutput.close();
 					}
@@ -199,7 +218,7 @@ public class DownloadActivity extends FragmentActivity
 		}
 	}
 
-	private final static String ARCHIVE_URL = "http://web403.webbox555.server-home.org/drake/tatoeba/tatoeba.zip";
+	private final static String ARCHIVE_URL = TatoebaApplication.API_SERVER + "static/bin/gen/tatoeba.zip";
 	private final static String ARCHIVE_NAME = "tatoeba.zip";
 
 

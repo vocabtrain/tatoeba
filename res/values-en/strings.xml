@@ -32,7 +32,7 @@
 	<string name="layout_button_accept">Accept</string>
 	<string name="layout_button_decline">Decline</string>
 	<string name="layout_license_view">Show License</string>
-	<string name="layout_button_select_file">Choose Path</string>
+	<string name="layout_button_seelect_file">Choose Path</string>
 	<string name="pref_directory">Directory</string>
 	<string name="pref_directory_summary">External directory in which the database is
 		contained.</string>
@@ -62,7 +62,7 @@
 			<string name="button_done">Done</string>
 		
 	<string name="error_directory_not_exist_title">Could not find database directory!</string>
-	<string name="error_directory_not_exist">The directory &#8216;%s&#8217; does not exist. In order to use offline search, you have to download the database to this diretory, or specify another directory in the preferences. Do you want to open the preferences?</string>
+	<string name="error_directory_not_exist">The directory &#8216;%s&#8217; does not exist. In order to use offline search, you have to download the database to this directory, or specify another directory in the preferences. Do you want to open the preferences?</string>
 	<string name="menu_preferences">Preferences</string>
 	<string name="menu_about">About</string>
 

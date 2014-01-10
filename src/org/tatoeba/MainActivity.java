@@ -51,7 +51,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -508,7 +507,7 @@ public class MainActivity extends FragmentActivity implements LoaderManager.Load
 				@Override
 				public void run() {
 					try {
-						URLConnection connection = new URL(TranslationProvider.API_SERVER).openConnection();
+						URLConnection connection = new URL(TatoebaApplication.API_SERVER).openConnection();
 						connection.connect();
 					} catch (final IOException e) {
 						if(isFinishing()) return;

@@ -24,16 +24,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 import org.tatoeba.providers.ProviderInterface.LinkTable;
 
 public class Sentences
@@ -49,8 +49,8 @@ public class Sentences
 	{
 		final Directory index = FSDirectory.open(new File(lucene_sentences_dir + language));
 		final Analyzer analyzer = LuceneFunctions.getLanguageAnalyzer(language);
-		final Query q = new QueryParser(Version.LUCENE_35, LinkTable.TEXT, analyzer).parse(querystring);
-		final IndexReader reader = IndexReader.open(index);
+		final Query q = new QueryParser(LuceneFunctions.LUCENE_VERSION, LinkTable.TEXT, analyzer).parse(querystring);
+		final IndexReader reader = DirectoryReader.open(index);
 		final IndexSearcher searcher = new IndexSearcher(reader);
 		final TopScoreDocCollector collector = TopScoreDocCollector.create(limit, true);
 		searcher.search(q, collector);
@@ -62,7 +62,7 @@ public class Sentences
 			final int docId = hits[i].doc;
 			answers.add(Long.parseLong(searcher.doc(docId).get(ProviderInterface.SearchTable._ID)));
 		}
-		searcher.close();
+		reader.close();
 		return answers;
 	}
 }

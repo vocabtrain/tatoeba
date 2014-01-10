@@ -20,6 +20,7 @@ package org.tatoeba.providers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -28,7 +29,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.lucene.queryParser.ParseException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.tatoeba.TatoebaApplication;
 import org.tatoeba.providers.ProviderInterface.LinkTable;
 import org.tatoeba.providers.ProviderInterface.RubyTable;
 import org.tatoeba.providers.ProviderInterface.SearchTable;
@@ -71,8 +77,7 @@ public class TranslationProvider extends ContentProvider
 	}
 	private Sentences sentenceSearcher;
 
-	public static final String API_SERVER = "http://ursaminor.informatik.uni-augsburg.de/koeppldo/";
-	private static final String API_ROOT = API_SERVER + "tatoeba/";
+	private static final String API_ROOT = TatoebaApplication.API_SERVER + "tatoeba/";
 	private static final String API_FULL_SEARCH = API_ROOT + "query/%s/%s";
 	private static final String API_RANDOM_SAMPLE_WITH_LANGUAGE = API_ROOT + "query/%s";
 	private static final String API_RANDOM_SAMPLE = API_ROOT + "query";
@@ -318,9 +323,17 @@ public class TranslationProvider extends ContentProvider
 						cursor.close();
 					}
 					
+					final HttpClient client = new DefaultHttpClient();
+		            client.getParams().setParameter("Accept", "application/xml");
+		            final HttpGet get = new HttpGet(url);
+		            final HttpResponse responseGet = client.execute(get);
+		            final InputStream response = responseGet.getEntity().getContent();
+
+					
+					
 					final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 					final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-					final Document document = documentBuilder.parse(new URL(url).openStream());
+					final Document document = documentBuilder.parse(response);
 					document.getDocumentElement().normalize();
 					final MatrixCursor cursor = new MatrixCursor(projection);
 					

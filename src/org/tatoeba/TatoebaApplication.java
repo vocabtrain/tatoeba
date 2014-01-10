@@ -22,4 +22,7 @@ public class TatoebaApplication extends Application {
 		ACRA.init(this); // The following line triggers the initialization of ACRA
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
+	
+	public static final String API_SERVER = "http://ursamajor.informatik.uni-augsburg.de:2235/";
+
 }

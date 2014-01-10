@@ -39,6 +39,7 @@ import org.apache.lucene.analysis.hu.HungarianAnalyzer;
 import org.apache.lucene.analysis.hy.ArmenianAnalyzer;
 import org.apache.lucene.analysis.id.IndonesianAnalyzer;
 import org.apache.lucene.analysis.it.ItalianAnalyzer;
+import org.apache.lucene.analysis.ja.JapaneseAnalyzer;
 import org.apache.lucene.analysis.lv.LatvianAnalyzer;
 import org.apache.lucene.analysis.nl.DutchAnalyzer;
 import org.apache.lucene.analysis.no.NorwegianAnalyzer;
@@ -53,7 +54,7 @@ import org.apache.lucene.util.Version;
 
 public class LuceneFunctions
 {
-	public static final Version LUCENE_VERSION = Version.LUCENE_35;
+	public static final Version LUCENE_VERSION = Version.LUCENE_41;
 
 	public static Analyzer getLanguageAnalyzer(final String language)
 	{
@@ -63,7 +64,7 @@ public class LuceneFunctions
 		if(language.equals("bul")) return new BulgarianAnalyzer(LUCENE_VERSION);
 		if(language.equals("cat")) return new CatalanAnalyzer(LUCENE_VERSION);
 		if(language.equals("zho")) return new CJKAnalyzer(LUCENE_VERSION);
-		if(language.equals("jpn")) return new CJKAnalyzer(LUCENE_VERSION);
+		if(language.equals("jpn")) return new JapaneseAnalyzer(LUCENE_VERSION);
 		if(language.equals("kor")) return new CJKAnalyzer(LUCENE_VERSION);
 		if(language.equals("ces")) return new CzechAnalyzer(LUCENE_VERSION);
 		if(language.equals("dan")) return new DanishAnalyzer(LUCENE_VERSION);
