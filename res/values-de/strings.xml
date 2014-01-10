@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Tatoeba - Collection of example sentences for android Copyright (C) 
+	2012 Dominik Köppl This program is free software: you can redistribute it 
+	and/or modify it under the terms of the GNU General Public License as published 
+	by the Free Software Foundation, either version 3 of the License, or (at 
+	your option) any later version. This program is distributed in the hope that 
+	it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+	of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General 
+	Public License for more details. You should have received a copy of the GNU 
+	General Public License along with this program. If not, see<http://www.gnu.org/licenses/>. -->
+
+<resources>
+    
+    
+                    <string name="pref_filter_language">Filtere Sprachen</string>
+                        <string name="pref_filter_language_summary">Wähle jene Sprachen, die angezeigt werden sollen während die Restlichen bei der Suche nicht beachtet werden.</string>
+                    
+    
+                       <string name="pref_acra">Fehlerbericht</string>
+                                           <string name="pref_acra_summary">Handhabung von Fehlern</string>
+    
+        <string name="crash_toast_text">Tatoeba ist abgestürzt. Bitte verwenden Sie das Formular in der Benachrichtigung, um den Entwicklern eine Nachricht zukommen zu lassen!</string>
+    <string name="crash_notif_ticker_text">Unerwarteter Fehler, bitte senden Sie einen Fehlerbericht&#8230;</string>
+    <string name="crash_notif_title">Tatoeba ist abgestürzt&#8230;</string>
+    <string name="crash_notif_text">Bitte klicken Sie hier, um die Angelegenheit zu beheben.</string>
+    <string name="crash_dialog_title">@string/crash_notif_title</string>
+    <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetaucht, der die Anwendung zum Stoppen zwang. Bitte helfen Sie uns, diesen zu beheben, alles was Sie dazu tun müssen, ist auf &#8216;Ok&#8217; zu drücken. </string>
+    <string name="crash_dialog_comment_prompt">Sie können ein Kommentar über das Problem hier unten anlegen:</string>
+    <string name="crash_dialog_ok_toast">Der Bericht wurde in die Sendeschleife eingefügt. Vielen Dank für Ihre Unterstützung!</string>
+    
+        <string name="pref_disable_acra">Fehler-Bericht abschalten</string>
+    <string name="pref_acra_disabled">Es wird kein Fehlerbericht erstellt</string>
+    <string name="pref_acra_enabled">Fehlerbericht eingeschaltet</string>
+    <string name="pref_acra_syslog_enabled">Sende Syslog-Daten</string>
+    <string name="pref_acra_syslog_disabled">Sende keine Syslog-Daten</string>
+    <string name="pref_acra_syslog">Senden von Syslog</string>
+    <string name="pref_acra_user_email">E-Mail Adresse</string>
+    <string name="pref_acra_user_email_summary">Sie können Ihre Adresse zur Kontaktierung angeben.</string>
+    <string name="pref_acra_alwaysaccept">Sende Fehlerbericht automatisch</string>
+    <string name="pref_acra_alwaysaccept_enabled">Sende Fehlerbericht automatisch</string>
+    <string name="pref_acra_alwaysaccept_disabled">Manuelle Auswahl zur Sendung des Fehlerberichts</string>
+    
+    
+    
+    
+    
+                  	    	<string name="desc_language_child_flag">Flagge</string>
+    
+                  	    	            		<string name="unknown_language">Unbekannt</string>            		
+            		<string name="example_language">deu</string>
+            	            	    	<string name="example_string">Hallo</string>
+                  	    	
+            	            	 
+            	            		            	            		<string name="error_no_internet_title">Kein Internet</string>            		
+            	            		<string name="error_no_internet">Ihr Internetanschluss ist fehlerhaft: &#8216;%s&#8217;. Bitte überprüfen Sie Ihre Netzwerkeinstellungen!</string>
+            	            		   	
+                  	    	            	            		<string name="button_donate">Spende</string>            		
+            	            	    	
+            	<string name="pref_offline_dict">Offline Wörterbuch</string>
+            	<string name="pref_offline_dict_on">Verwende heruntergeladene offline Datenbank zur Suche von Sätzen.</string>
+        	            	<string name="pref_offline_dict_off">Suche nach Beispielsätze online</string>
+            	
+    	<string name="button_start">Start</string>
+        	<string name="layout_download_path_label">Hole Archiv von: </string>
+    	
+        	<string name="pref_sentence_limit">Anzahl der Sätze</string>
+            	<string name="pref_sentence_limit_summary">Maximale Anzahl an Beispielsätzen, die in der Liste auftauchen.</string>
+            	
+    
+<string name="layout_license_accept">Ich akzeptiere die Lizenz</string>
+<string name="layout_button_accept">Akzeptieren</string>
+<string name="layout_button_decline">Ablehnen</string>
+<string name="layout_license_view">Lizenz anzeigen</string>
+<string name="layout_button_select_file">Pfad auswählen</string>
+<string name="pref_directory">Verzeichnis</string>
+<string name="pref_directory_summary">Das externe Verzeichnis, in dem sich die Datenbank befindet.</string>
+<string name="pref_show_language">Sprachen anzeigen</string>
+<string name="pref_show_language_on">Zeige Abkürzungen der Sprachen in der Liste an.</string>
+<string name="pref_show_language_off">Es werden keine Sprachbezeichnungen in der Liste angegeben.</string>
+<string name="pref_show_full_language">Anzeigen der Sprachnamen</string>
+<string name="pref_show_full_language_on">Es werden die Namen der Sprachen statt deren Abkürzung angezeigt.</string>
+<string name="pref_show_full_language_off">Es werden keine vollständigen Namen der Sprachen in der Liste angezeigt.</string>
+<string name="download_finished">Herunterladen beendet.</string>
+<string name="error_download">Ein Fehler ist passiert &#8230;</string>
+<string name="button_cancel">Abbrechen</string>
+
+<string name="layout_directory_usage">Wählen Sie den Pfad der Datenbank:</string>
+
+<string name="error_directory_not_createable_title">Kann Verzeichnis nicht erstellen!</string>
+<string name="error_directory_not_createable">Das Verzeichnis \'%s\' ist nicht zugänglich. Bitte
+überprüfen Sie, ob Sie die Berechtigung haben, auf den Pfad zugreifen zu dürfen.</string>
+
+<string name="button_load">Laden</string>
+<string name="missing_oi_filemanager">Bitte installieren Sie den OI File Manager aus
+OpenIntents.</string>
+<string name="button_done">Fertig</string>
+
+<string name="error_directory_not_exist_title">Datenbank-Verzeichnis konnte nicht gefunden werden!</string>
+<string name="error_directory_not_exist">Das Verzeichnis &#8220;%s&#8221; existiert nicht. Wollen Sie ein anderes Verzeichnis in den Einstellungen angeben?</string>
+<string name="menu_preferences">Einstellungen</string>
+<string name="menu_about">Über</string>
+
+<string name="download_filelabel">Extrahiere %2$d.te Datei &#8220;%1$s&#8221;</string>
+<string name="layout_download_label">Lade Archiv vom Server &#8230;</string>
+<string name="layout_extract_label">Entpacke Archiv &#8230;</string>
+<string name="pref_download">Datenbank-Download</string>
+<string name="pref_download_summary">Lädt und extrahiert eine Archiv-Datei vom Server automatisch.</string>
+
+<string name="lang_afr">Afrikaans</string>
+<string name="lang_ain">Ainu</string>
+<string name="lang_sqi">Albanisch</string>
+<string name="lang_ara">Arabisch</string>
+<string name="lang_hye">Armenisch</string>
+<string name="lang_ast">Asturisch</string>
+<string name="lang_eus">Baskisch</string>
+<string name="lang_bel">Belarussisch</string>
+<string name="lang_ben">Bengalisch</string>
+<string name="lang_bos">Bosnisch</string>
+<string name="lang_bre">Breton</string>
+<string name="lang_bul">Bulgarisch</string>
+<string name="lang_yue">Kantonesisch</string>
+<string name="lang_cat">Katalanisch</string>
+<string name="lang_cha">Chamorro</string>
+<string name="lang_cmn">Chinesisch</string>
+<string name="lang_hrv">Kroatisch</string>
+<string name="lang_cycl">Cycl</string>
+<string name="lang_ces">Tschechisch</string>
+<string name="lang_dan">Dänisch</string>
+<string name="lang_nld">Niederländisch</string>
+<string name="lang_arz">Ägyptisches Arabisch</string>
+<string name="lang_eng">Englisch</string>
+<string name="lang_epo">Esperanto</string>
+<string name="lang_est">Estnisch</string>
+<string name="lang_fao">Färöisch</string>
+<string name="lang_fin">Finnisch</string>
+<string name="lang_fra">Französisch</string>
+<string name="lang_fry">Friesisch</string>
+<string name="lang_glg">Galizisch</string>
+<string name="lang_kat">Georgisch</string>
+<string name="lang_deu">Deutsch</string>
+<string name="lang_heb">Hebräisch</string>
+<string name="lang_hin">Hindi</string>
+<string name="lang_hun">Ungarisch</string>
+<string name="lang_isl">Isländisch</string>
+<string name="lang_ido">Ido</string>
+<string name="lang_ind">Indonesisch</string>
+<string name="lang_ina">Interlingua</string>
+<string name="lang_ile">Interlingue</string>
+<string name="lang_acm">irakisch Arabisch</string>
+<string name="lang_gle">Irish</string>
+<string name="lang_ita">Italienisch</string>
+<string name="lang_jpn">Japanisch</string>
+<string name="lang_xal">Kalmückisch</string>
+<string name="lang_kaz">Kasachisch</string>
+<string name="lang_tlh">Klingonen</string>
+<string name="lang_kor">Koreanisch</string>
+<string name="lang_lat">Latein</string>
+<string name="lang_lvs">Lettisch</string>
+<string name="lang_lzh">Literary Chinese</string>
+<string name="lang_lit">Litauisch</string>
+<string name="lang_jbo">Lojban</string>
+<string name="lang_nds">Niedersächsisch</string>
+<string name="lang_zsm">Malaiisch</string>
+<string name="lang_mal">Malayalam</string>
+<string name="lang_ell">Neugriechisch</string>
+<string name="lang_mon">Mongolisch</string>
+<string name="lang_nob">Norwegisch (Bokmål)</string>
+<string name="lang_non">Norwegisch (Nynorsk)</string>
+<string name="lang_oci">Okzitanisch</string>
+<string name="lang_orv">Old ostslawisch</string>
+<string name="lang_oss">Ossetisch</string>
+<string name="lang_pes">Persisch</string>
+<string name="lang_pol">Polnisch</string>
+<string name="lang_por">Portugiesisch</string>
+<string name="lang_que">Quechua</string>
+<string name="lang_ron">Rumänisch</string>
+<string name="lang_roh">Rätoromanisch</string>
+<string name="lang_rus">Russisch</string>
+<string name="lang_san">Sanskrit</string>
+<string name="lang_gla">Schottisch-Gälisch</string>
+<string name="lang_srp">Serbisch</string>
+<string name="lang_wuu">Shanghainese</string>
+<string name="lang_scn">sizilianisch</string>
+<string name="lang_slk">Slowakisch</string>
+<string name="lang_slv">Slowenisch</string>
+<string name="lang_spa">Spanisch</string>
+<string name="lang_swh">Swahili</string>
+<string name="lang_swe">Schwedisch</string>
+<string name="lang_tgl">Tagalog</string>
+<string name="lang_tat">Tatar</string>
+<string name="lang_nan">Teochew</string>
+<string name="lang_tha">Thai</string>
+<string name="lang_toki">Toki Pona</string>
+<string name="lang_tur">Türkisch</string>
+<string name="lang_ukr">Ukrainisch</string>
+<string name="lang_urd">Urdu</string>
+<string name="lang_uig">Uiguren</string>
+<string name="lang_uzb">Usbekisch</string>
+<string name="lang_vie">Vietnamesisch</string>
+<string name="lang_vol">Volapük</string>
+<string name="lang_yid">Jiddisch</string>
+</resources>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Tatoeba - Collection of example sentences for android Copyright (C) 
+	2012 Dominik Köppl This program is free software: you can redistribute it 
+	and/or modify it under the terms of the GNU General Public License as published 
+	by the Free Software Foundation, either version 3 of the License, or (at 
+	your option) any later version. This program is distributed in the hope that 
+	it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+	of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General 
+	Public License for more details. You should have received a copy of the GNU 
+	General Public License along with this program. If not, see <http://www.gnu.org/licenses/>. -->
+
+<resources>
+                    <string name="menu_random">Zufall</string>
+    
+    
+        	<string name="pref_offline_dict">Offline Dictionary</string>
+            	<string name="pref_offline_dict_on">Use downloaded offline database to search for sentences.</string>
+        	            	<string name="pref_offline_dict_off">Search for example sentences online.</string>
+            	   	    	<string name="desc_language_child_flag">Flag</string>
+            		<string name="unknown_language">Unknown</string>            		
+            		<string name="example_language">eng</string>
+            	            	    	<string name="example_string">hello</string>
+        	            	
+    	<string name="button_start">Start</string>
+        	<string name="layout_download_path_label">Fetch archive from: </string>
+    	
+        	<string name="pref_sentence_limit">Sentences-Count</string>
+            	<string name="pref_sentence_limit_summary">Maximal count of example sentences shown in the list.</string>
+        	
+	<string name="layout_license_accept">I accept the license.</string>
+	<string name="layout_button_accept">Accept</string>
+	<string name="layout_button_decline">Decline</string>
+	<string name="layout_license_view">Show License</string>
+	<string name="layout_button_select_file">Choose Path</string>
+	<string name="pref_directory">Directory</string>
+	<string name="pref_directory_summary">External directory in which the database is
+		contained.</string>
+	<string name="pref_show_language">Show languages</string>
+	<string name="pref_show_language_on">Show abbreviations of the languages in the list.
+	</string>
+	<string name="pref_show_language_off">Do not show language captions in the list.</string>
+	<string name="pref_show_full_language">Show language-names</string>
+	<string name="pref_show_full_language_on">Show full names of languages instead abbreviation.
+	</string>
+	<string name="pref_show_full_language_off">Do not show full names of languages in list.
+	</string>
+	<string name="download_finished">Download finished.</string>
+	<string name="error_download">An Error happened &#8230;</string>
+	<string name="button_cancel">Cancel</string>
+
+	<string name="layout_directory_usage">Choose the path containing the database: </string>
+
+	<string name="error_directory_not_createable_title">Can\'t create directory!</string>
+	<string name="error_directory_not_createable">The directory \'%s\' is not accessible. Please
+		verify that you have permission to access/create this path.</string>
+
+
+	<string name="button_load">Load</string>
+	<string name="missing_oi_filemanager">Please install the OI file manager from
+		OpenIntents.</string>
+			<string name="button_done">Done</string>
+		
+	<string name="error_directory_not_exist_title">Could not find database directory!</string>
+	<string name="error_directory_not_exist">The directory &#8216;%s&#8217; does not exist. In order to use offline search, you have to download the database to this diretory, or specify another directory in the preferences. Do you want to open the preferences?</string>
+	<string name="menu_preferences">Preferences</string>
+	<string name="menu_about">About</string>
+
+	<string name="download_filelabel">Extracting %2$d.th file &#8216;%1$s&#8217;</string>
+	<string name="layout_download_label">Downloading archive from server  &#8230;</string>
+	<string name="layout_extract_label">Extracting archive  &#8230;</string>
+	<string name="pref_download">Download database</string>
+	<string name="pref_download_summary">Fetches and extracts an archive file from the server automatically.</string>
+
+	<string name="lang_afr">Afrikaans</string>
+	<string name="lang_ain">Ainu</string>
+	<string name="lang_sqi">Albanian</string>
+	<string name="lang_ara">Arabic</string>
+	<string name="lang_hye">Armenian</string>
+	<string name="lang_ast">Asturian</string>
+	<string name="lang_eus">Basque</string>
+	<string name="lang_bel">Belarusian</string>
+	<string name="lang_ben">Bengali</string>
+	<string name="lang_bos">Bosnian</string>
+	<string name="lang_bre">Breton</string>
+	<string name="lang_bul">Bulgarian</string>
+	<string name="lang_yue">Cantonese</string>
+	<string name="lang_cat">Catalan</string>
+	<string name="lang_cha">Chamorro</string>
+	<string name="lang_cmn">Chinese</string>
+	<string name="lang_hrv">Croatian</string>
+	<string name="lang_cycl">CycL</string>
+	<string name="lang_ces">Czech</string>
+	<string name="lang_dan">Danish</string>
+	<string name="lang_nld">Dutch</string>
+	<string name="lang_arz">Egyptian Arabic</string>
+	<string name="lang_eng">English</string>
+	<string name="lang_epo">Esperanto</string>
+	<string name="lang_est">Estonian</string>
+	<string name="lang_fao">Faroese</string>
+	<string name="lang_fin">Finnish</string>
+	<string name="lang_fra">French</string>
+	<string name="lang_fry">Frisian</string>
+	<string name="lang_glg">Galician</string>
+	<string name="lang_kat">Georgian</string>
+	<string name="lang_deu">German</string>
+	<string name="lang_heb">Hebrew</string>
+	<string name="lang_hin">Hindi</string>
+	<string name="lang_hun">Hungarian</string>
+	<string name="lang_isl">Icelandic</string>
+	<string name="lang_ido">Ido</string>
+	<string name="lang_ind">Indonesian</string>
+	<string name="lang_ina">Interlingua</string>
+	<string name="lang_ile">Interlingue</string>
+	<string name="lang_acm">Iraqi Arabic</string>
+	<string name="lang_gle">Irish</string>
+	<string name="lang_ita">Italian</string>
+	<string name="lang_jpn">Japanese</string>
+	<string name="lang_xal">Kalmyk</string>
+	<string name="lang_kaz">Kazakh</string>
+	<string name="lang_tlh">Klingon</string>
+	<string name="lang_kor">Korean</string>
+	<string name="lang_lat">Latin</string>
+	<string name="lang_lvs">Latvian</string>
+	<string name="lang_lzh">Literary Chinese</string>
+	<string name="lang_lit">Lithuanian</string>
+	<string name="lang_jbo">Lojban</string>
+	<string name="lang_nds">Low Saxon</string>
+	<string name="lang_zsm">Malay</string>
+	<string name="lang_mal">Malayalam</string>
+	<string name="lang_ell">Modern Greek</string>
+	<string name="lang_mon">Mongolian</string>
+	<string name="lang_nob">Norwegian (Bokmål)</string>
+	<string name="lang_non">Norwegian (Nynorsk)</string>
+	<string name="lang_oci">Occitan</string>
+	<string name="lang_orv">Old East Slavic</string>
+	<string name="lang_oss">Ossetian</string>
+	<string name="lang_pes">Persian</string>
+	<string name="lang_pol">Polish</string>
+	<string name="lang_por">Portuguese</string>
+	<string name="lang_que">Quechua</string>
+	<string name="lang_ron">Romanian</string>
+	<string name="lang_roh">Romansh</string>
+	<string name="lang_rus">Russian</string>
+	<string name="lang_san">Sanskrit</string>
+	<string name="lang_gla">Scottish Gaelic</string>
+	<string name="lang_srp">Serbian</string>
+	<string name="lang_wuu">Shanghainese</string>
+	<string name="lang_scn">Sicilian</string>
+	<string name="lang_slk">Slovak</string>
+	<string name="lang_slv">Slovenian</string>
+	<string name="lang_spa">Spanish</string>
+	<string name="lang_swh">Swahili</string>
+	<string name="lang_swe">Swedish</string>
+	<string name="lang_tgl">Tagalog</string>
+	<string name="lang_tat">Tatar</string>
+	<string name="lang_nan">Teochew</string>
+	<string name="lang_tha">Thai</string>
+	<string name="lang_toki">Toki Pona</string>
+	<string name="lang_tur">Turkish</string>
+	<string name="lang_ukr">Ukrainian</string>
+	<string name="lang_urd">Urdu</string>
+	<string name="lang_uig">Uyghur</string>
+	<string name="lang_uzb">Uzbek</string>
+	<string name="lang_vie">Vietnamese</string>
+	<string name="lang_vol">Volapük</string>
+	<string name="lang_yid">Yiddish</string>
+</resources>

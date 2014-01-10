@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Tatoeba - Collection of example sentences for android 
+Copyright (C) 2012 Dominik Köppl
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<PreferenceScreen
+        xmlns:my="http://schemas.android.com/apk/res/org.devwork.vocabtrain"
+     xmlns:android="http://schemas.android.com/apk/res/android">
+
+             
+		<CheckBoxPreference android:key="offline_dict"
+			android:title="@string/pref_offline_dict" android:summaryOn="@string/pref_offline_dict_on"
+			android:summaryOff="@string/pref_offline_dict_off" android:defaultValue="false" />
+
+    
+       	
+<org.tatoeba.DirectoryPreference
+    android:key="directory"
+    android:title="@string/pref_directory"
+    android:summary="@string/pref_directory_summary" 
+      android:inputType="textUri" 
+     />
+     
+     
+             <PreferenceScreen
+            android:title="@string/pref_download"
+            android:summary="@string/pref_download_summary">
+            <intent
+                android:action="org.tatoeba.DOWNLOAD"
+                android:targetPackage="org.tatoeba"
+                android:targetClass="org.tatoeba.DownloadActivity" />
+        </PreferenceScreen>
+     
+     
+       	
+<org.tatoeba.FilterLanguagePreference
+    android:key="filterlanguage"
+    android:title="@string/pref_filter_language"
+    android:summary="@string/pref_filter_language_summary" 
+     />
+     
+    
+		<CheckBoxPreference android:key="show_language"
+			android:title="@string/pref_show_language" android:summaryOn="@string/pref_show_language_on"
+			android:summaryOff="@string/pref_show_language_off" android:defaultValue="false" />
+
+
+		<CheckBoxPreference android:key="show_full_language"
+		    android:dependency="show_language"
+			android:title="@string/pref_show_full_language" android:summaryOn="@string/pref_show_full_language_on"
+			android:summaryOff="@string/pref_show_full_language_off" android:defaultValue="false" />
+		
+		
+		
+		<EditTextPreference android:key="sencence_limit"
+		    android:inputType="number"
+		    android:defaultValue="10"
+		    android:dependency="offline_dict"
+			android:title="@string/pref_sentence_limit" android:summary="@string/pref_sentence_limit_summary" />
+		
+		
+		
+		<PreferenceScreen 
+		               android:title="@string/pref_acra" 
+           android:summary="@string/pref_acra_summary" >
+
+		<CheckBoxPreference android:key="acra.disable"
+			android:title="@string/pref_disable_acra" android:summaryOn="@string/pref_acra_disabled"
+			android:summaryOff="@string/pref_acra_enabled" android:defaultValue="false" />
+
+		<CheckBoxPreference android:key="acra.syslog.enable"
+			android:summaryOn="@string/pref_acra_syslog_enabled"
+			android:summaryOff="@string/pref_acra_syslog_disabled" android:title="@string/pref_acra_syslog"
+			android:defaultValue="true" />
+
+		<EditTextPreference android:key="acra.user.email"
+		    android:inputType="textEmailAddress"
+			android:title="@string/pref_acra_user_email" android:summary="@string/pref_acra_user_email_summary" />
+
+		<CheckBoxPreference android:key="acra.alwaysaccept"
+			android:title="@string/pref_acra_alwaysaccept" android:summaryOn="@string/pref_acra_alwaysaccept_enabled"
+			android:summaryOff="@string/pref_acra_alwaysaccept_disabled"
+			android:defaultValue="false" />
+
+		
+		
+		
+	</PreferenceScreen>
+		
+		
+
+</PreferenceScreen>

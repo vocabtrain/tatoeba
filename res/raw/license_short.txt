@@ -1,0 +1,27 @@
+Tatoeba - Collection of example sentences for android (http://tatoeba.berlios.de)
+Copyright (C) 2012 Dominik Köppl <niki@users.berlios.de>
+
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. 
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Acknowledgement
+
+I'm grateful for the kind help of Simon Allan (aka. sysko) who has provided access to the online server and its API. 
+
+Database and Images are provided by the Tatoeba Project (http://tatoeba.org) under the Creative Commons Attribution License 2.0 (fr).
+
+Program Icon provided by Bastian Kuhn under the Creative Commons SA-BY License 2.0.
+
+Database Indexing is powered by the Apache Lucene Library provided under the Apache License, Version 2.0.
+
+Crash Report powered by ACRA (https://code.google.com/p/acra) provided under the Apache License, Version 2.0.
+
+Fonts Scheherazade, Annapurna SIL, Ezra SIL provided under the OFL license,
+DeJaVuSans provided by http://dejavu-fonts.org/ under the Bitstream Vera Fonts Copyright,
+Akaash, Meera and Garuda under GPL-2
+
+Sourcecode is based on Android sample code and the android support library provided by Google Inc. under the Apache License, Version 2.0.
