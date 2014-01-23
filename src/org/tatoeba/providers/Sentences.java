@@ -47,22 +47,30 @@ public class Sentences
 
 	List<Long> findExamples(final String querystring, final String language, final int limit) throws ParseException, IOException
 	{
-		final Directory index = FSDirectory.open(new File(lucene_sentences_dir + language));
-		final Analyzer analyzer = LuceneFunctions.getLanguageAnalyzer(language);
-		final Query q = new QueryParser(LuceneFunctions.LUCENE_VERSION, LinkTable.TEXT, analyzer).parse(querystring);
-		final IndexReader reader = DirectoryReader.open(index);
-		final IndexSearcher searcher = new IndexSearcher(reader);
-		final TopScoreDocCollector collector = TopScoreDocCollector.create(limit, true);
-		searcher.search(q, collector);
-		final ScoreDoc[] hits = collector.topDocs().scoreDocs;
-		final List<Long> answers = new LinkedList<Long>();
-
-		for(int i = 0; i < hits.length; ++i)
+		try
 		{
-			final int docId = hits[i].doc;
-			answers.add(Long.parseLong(searcher.doc(docId).get(ProviderInterface.SearchTable._ID)));
+			final Directory index = FSDirectory.open(new File(lucene_sentences_dir + language));
+			final Analyzer analyzer = LuceneFunctions.getLanguageAnalyzer(language);
+			final Query q = new QueryParser(LuceneFunctions.LUCENE_VERSION, LinkTable.TEXT, analyzer).parse(querystring);
+			final IndexReader reader = DirectoryReader.open(index);
+			final IndexSearcher searcher = new IndexSearcher(reader);
+			final TopScoreDocCollector collector = TopScoreDocCollector.create(limit, true);
+			searcher.search(q, collector);
+			final ScoreDoc[] hits = collector.topDocs().scoreDocs;
+			final List<Long> answers = new LinkedList<Long>();
+	
+			for(int i = 0; i < hits.length; ++i)
+			{
+				final int docId = hits[i].doc;
+				answers.add(Long.parseLong(searcher.doc(docId).get(ProviderInterface.SearchTable._ID)));
+			}
+			reader.close();
+			return answers;
 		}
-		reader.close();
-		return answers;
+		catch(ExceptionInInitializerError e)
+		{
+			e.printStackTrace();
+			return new LinkedList<Long>();
+		}
 	}
 }

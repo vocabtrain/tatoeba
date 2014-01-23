@@ -23,6 +23,7 @@ public class TatoebaApplication extends Application {
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
 	
-	public static final String API_SERVER = "http://ursamajor.informatik.uni-augsburg.de:2235/";
+	//public static final String API_SERVER = "http://ursamajor.informatik.uni-augsburg.de:2235/";
+	public static final String API_SERVER = "http://137.250.169.80:4000/";
 
 }

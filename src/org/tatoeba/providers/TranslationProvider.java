@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -308,7 +309,7 @@ public class TranslationProvider extends ContentProvider
 						if(querystring.length() == 0) querystring = null;
 						if(language.length() == 0) language = null;
 					}
-					final String url = querystring != null ? String.format(API_FULL_SEARCH, language == null ? "und" : language, querystring)
+					final String url = querystring != null ? String.format(API_FULL_SEARCH, language == null ? "und" : language, URLEncoder.encode(querystring, "UTF-8"))
 						: (language != null ? String.format(API_RANDOM_SAMPLE_WITH_LANGUAGE, language) : API_RANDOM_SAMPLE);
 					
 					if(querystring != null)
@@ -323,9 +324,10 @@ public class TranslationProvider extends ContentProvider
 						cursor.close();
 					}
 					
-					final HttpClient client = new DefaultHttpClient();
-		            client.getParams().setParameter("Accept", "application/xml");
+					final HttpClient client = new DefaultHttpClient();                                                                                                                          
+                    client.getParams().setParameter("Accept", "text/xml,application/xml");
 		            final HttpGet get = new HttpGet(url);
+		            get.addHeader("Accept", "text/xml,application/xml");
 		            final HttpResponse responseGet = client.execute(get);
 		            final InputStream response = responseGet.getEntity().getContent();
 
