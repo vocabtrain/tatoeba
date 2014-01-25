@@ -45,6 +45,7 @@ import org.apache.lucene.store.IndexInput;
 import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.IOUtils;
+import org.apache.lucene.util.RamUsageEstimator;
 
 /** @deprecated Only for reading existing 3.x indexes */
 @Deprecated
@@ -348,6 +349,11 @@ class Lucene3xTermVectorsReader extends TermVectorsReader {
     }
 
     @Override
+    public boolean hasFreqs() {
+      return true;
+    }
+
+    @Override
     public boolean hasOffsets() {
       return storeOffsets;
     }
@@ -457,7 +463,7 @@ class Lucene3xTermVectorsReader extends TermVectorsReader {
 
     // NOTE: slow!  (linear scan)
     @Override
-    public SeekStatus seekCeil(BytesRef text, boolean useCache) throws IOException {
+    public SeekStatus seekCeil(BytesRef text) throws IOException {
       Comparator<BytesRef> comparator = getComparator();
       for (int i = 0; i < numTerms; i++) {
         int cmp = comparator.compare(text, termAndPostings[i].term);
@@ -587,6 +593,11 @@ class Lucene3xTermVectorsReader extends TermVectorsReader {
       this.doc = -1;
       didNext = false;
     }
+
+    @Override
+    public long cost() {
+      return 1;
+    }
   }
 
   private static class TVDocsAndPositionsEnum extends DocsAndPositionsEnum {
@@ -677,6 +688,11 @@ class Lucene3xTermVectorsReader extends TermVectorsReader {
         return -1;
       }
     }
+    
+    @Override
+    public long cost() {
+      return 1;
+    }
   }
 
   @Override
@@ -720,6 +736,11 @@ class Lucene3xTermVectorsReader extends TermVectorsReader {
   // index, using the test-only PreFlexRW.
   protected boolean sortTermsByUnicode() {
     return true;
+  }
+
+  @Override
+  public long ramBytesUsed() {
+    return RamUsageEstimator.sizeOf(this);
   }
 }
 

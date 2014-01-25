@@ -434,6 +434,16 @@ public class IndexSearcher {
    *         {@link BooleanQuery#getMaxClauseCount()} clauses.
    */
   protected TopDocs search(Weight weight, ScoreDoc after, int nDocs) throws IOException {
+    int limit = reader.maxDoc();
+    if (limit == 0) {
+      limit = 1;
+    }
+    if (after != null && after.doc >= limit) {
+      throw new IllegalArgumentException("after.doc exceeds the number of documents in that reader: after.doc="
+          + after.doc + " limit=" + limit);
+    }
+    nDocs = Math.min(nDocs, limit);
+    
     if (executor == null) {
       return search(leafContexts, weight, after, nDocs);
     } else {
@@ -442,8 +452,7 @@ public class IndexSearcher {
       final ExecutionHelper<TopDocs> runner = new ExecutionHelper<TopDocs>(executor);
     
       for (int i = 0; i < leafSlices.length; i++) { // search each sub
-        runner.submit(
-                      new SearcherCallableNoSort(lock, this, leafSlices[i], weight, after, nDocs, hq));
+        runner.submit(new SearcherCallableNoSort(lock, this, leafSlices[i], weight, after, nDocs, hq));
       }
 
       int totalHits = 0;
@@ -505,12 +514,6 @@ public class IndexSearcher {
    * Just like {@link #search(Weight, int, Sort, boolean, boolean)}, but you choose
    * whether or not the fields in the returned {@link FieldDoc} instances should
    * be set by specifying fillFields.
-   *
-   * <p>NOTE: this does not compute scores by default.  If you
-   * need scores, create a {@link TopFieldCollector}
-   * instance by calling {@link TopFieldCollector#create} and
-   * then pass that to {@link #search(List, Weight,
-   * Collector)}.</p>
    */
   protected TopFieldDocs search(Weight weight, FieldDoc after, int nDocs,
                                 Sort sort, boolean fillFields,
@@ -519,6 +522,12 @@ public class IndexSearcher {
 
     if (sort == null) throw new NullPointerException("Sort must not be null");
     
+    int limit = reader.maxDoc();
+    if (limit == 0) {
+      limit = 1;
+    }
+    nDocs = Math.min(nDocs, limit);
+
     if (executor == null) {
       // use all leaves here!
       return search(leafContexts, weight, after, nDocs, sort, fillFields, doDocScores, doMaxScore);
@@ -599,10 +608,21 @@ public class IndexSearcher {
     // threaded...?  the Collector could be sync'd?
     // always use single thread:
     for (AtomicReaderContext ctx : leaves) { // search each subreader
-      collector.setNextReader(ctx);
+      try {
+        collector.setNextReader(ctx);
+      } catch (CollectionTerminatedException e) {
+        // there is no doc of interest in this reader context
+        // continue with the following leaf
+        continue;
+      }
       Scorer scorer = weight.scorer(ctx, !collector.acceptsDocsOutOfOrder(), true, ctx.reader().getLiveDocs());
       if (scorer != null) {
-        scorer.score(collector);
+        try {
+          scorer.score(collector);
+        } catch (CollectionTerminatedException e) {
+          // collection was terminated prematurely
+          // continue with the following leaf
+        }
       }
     }
   }
@@ -788,6 +808,11 @@ public class IndexSearcher {
       public float score() {
         return score;
       }
+
+      @Override
+      public long cost() {
+        return 1;
+      }
     }
 
     private final FakeScorer fakeScorer = new FakeScorer();
@@ -796,7 +821,7 @@ public class IndexSearcher {
     public TopFieldDocs call() throws IOException {
       assert slice.leaves.length == 1;
       final TopFieldDocs docs = searcher.search(Arrays.asList(slice.leaves),
-          weight, after, nDocs, sort, true, doDocScores, doMaxScore);
+          weight, after, nDocs, sort, true, doDocScores || sort.needsScores(), doMaxScore);
       lock.lock();
       try {
         final AtomicReaderContext ctx = slice.leaves[0];
@@ -900,7 +925,7 @@ public class IndexSearcher {
    */
   public TermStatistics termStatistics(Term term, TermContext context) throws IOException {
     return new TermStatistics(term.bytes(), context.docFreq(), context.totalTermFreq());
-  };
+  }
   
   /**
    * Returns {@link CollectionStatistics} for a field.

@@ -46,6 +46,8 @@ public final class Constants {
   public static final boolean SUN_OS = OS_NAME.startsWith("SunOS");
   /** True iff running on Mac OS X */
   public static final boolean MAC_OS_X = OS_NAME.startsWith("Mac OS X");
+  /** True iff running on FreeBSD */
+  public static final boolean FREE_BSD = OS_NAME.startsWith("FreeBSD");
 
   public static final String OS_ARCH = System.getProperty("os.arch");
   public static final String OS_VERSION = System.getProperty("os.version");
@@ -122,7 +124,7 @@ public final class Constants {
   /**
    * This is the internal Lucene version, recorded into each segment.
    */
-  public static final String LUCENE_MAIN_VERSION = ident("4.1");
+  public static final String LUCENE_MAIN_VERSION = ident("4.6");
 
   /**
    * This is the Lucene version for display purposes.

@@ -29,9 +29,6 @@ import java.util.Locale;
  * change the version at search-time, but instead also adjust
  * your indexing code to match, and re-index.
  */
-// remove me when java 5 is no longer supported
-// this is a workaround for a JDK bug that wrongly emits a warning.
-@SuppressWarnings("dep-ann")
 public enum Version {
   /**
    * Match settings and bugs in Lucene's 3.0 release.
@@ -89,13 +86,45 @@ public enum Version {
   @Deprecated
   LUCENE_40,
 
-  /** Match settings and bugs in Lucene's 4.1 release. 
+  /** Match settings and bugs in Lucene's 4.1 release.
+   * @deprecated (4.2) Use latest
+   */
+  @Deprecated
+  LUCENE_41,
+
+  /** Match settings and bugs in Lucene's 4.2 release.
+   * @deprecated (4.3) Use latest
+   */
+  @Deprecated
+  LUCENE_42,
+
+  /** Match settings and bugs in Lucene's 4.3 release.
+   * @deprecated (4.4) Use latest
+   */
+  @Deprecated
+  LUCENE_43,
+
+  /** Match settings and bugs in Lucene's 4.4 release.
+   * @deprecated (4.5) Use latest
+   */
+  @Deprecated
+  LUCENE_44,
+
+  /**
+   * Match settings and bugs in Lucene's 4.5 release.
+   * @deprecated (4.6) Use latest
+   */
+  @Deprecated
+  LUCENE_45,
+
+
+  /** Match settings and bugs in Lucene's 4.6 release.
    *  <p>
    *  Use this to get the latest &amp; greatest settings, bug
    *  fixes, etc, for Lucene.
    */
-  LUCENE_41,
-  
+  LUCENE_46,
+
   /* Add new constants for later versions **here** to respect order! */
 
   /**

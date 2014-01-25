@@ -91,7 +91,7 @@ public abstract class AtomicReader extends IndexReader {
       return 0;
     }
     final TermsEnum termsEnum = terms.iterator(null);
-    if (termsEnum.seekExact(term.bytes(), true)) {
+    if (termsEnum.seekExact(term.bytes())) {
       return termsEnum.docFreq();
     } else {
       return 0;
@@ -114,11 +114,38 @@ public abstract class AtomicReader extends IndexReader {
       return 0;
     }
     final TermsEnum termsEnum = terms.iterator(null);
-    if (termsEnum.seekExact(term.bytes(), true)) {
+    if (termsEnum.seekExact(term.bytes())) {
       return termsEnum.totalTermFreq();
     } else {
       return 0;
     }
+  }
+  
+  @Override
+  public final long getSumDocFreq(String field) throws IOException {
+    final Terms terms = terms(field);
+    if (terms == null) {
+      return 0;
+    }
+    return terms.getSumDocFreq();
+  }
+  
+  @Override
+  public final int getDocCount(String field) throws IOException {
+    final Terms terms = terms(field);
+    if (terms == null) {
+      return 0;
+    }
+    return terms.getDocCount();
+  }
+  
+  @Override
+  public final long getSumTotalTermFreq(String field) throws IOException {
+    final Terms terms = terms(field);
+    if (terms == null) {
+      return 0;
+    }
+    return terms.getSumTotalTermFreq();
   }
 
   /** This may return null if the field does not exist.*/
@@ -142,7 +169,7 @@ public abstract class AtomicReader extends IndexReader {
       final Terms terms = fields.terms(term.field());
       if (terms != null) {
         final TermsEnum termsEnum = terms.iterator(null);
-        if (termsEnum.seekExact(term.bytes(), true)) {
+        if (termsEnum.seekExact(term.bytes())) {
           return termsEnum.docs(getLiveDocs(), null);
         }
       }
@@ -162,26 +189,49 @@ public abstract class AtomicReader extends IndexReader {
       final Terms terms = fields.terms(term.field());
       if (terms != null) {
         final TermsEnum termsEnum = terms.iterator(null);
-        if (termsEnum.seekExact(term.bytes(), true)) {
+        if (termsEnum.seekExact(term.bytes())) {
           return termsEnum.docsAndPositions(getLiveDocs(), null);
         }
       }
     }
     return null;
   }
+
+  /** Returns {@link NumericDocValues} for this field, or
+   *  null if no {@link NumericDocValues} were indexed for
+   *  this field.  The returned instance should only be
+   *  used by a single thread. */
+  public abstract NumericDocValues getNumericDocValues(String field) throws IOException;
+
+  /** Returns {@link BinaryDocValues} for this field, or
+   *  null if no {@link BinaryDocValues} were indexed for
+   *  this field.  The returned instance should only be
+   *  used by a single thread. */
+  public abstract BinaryDocValues getBinaryDocValues(String field) throws IOException;
+
+  /** Returns {@link SortedDocValues} for this field, or
+   *  null if no {@link SortedDocValues} were indexed for
+   *  this field.  The returned instance should only be
+   *  used by a single thread. */
+  public abstract SortedDocValues getSortedDocValues(String field) throws IOException;
   
-  /**
-   * Returns {@link DocValues} for this field.
-   * This method may return null if the reader has no per-document
-   * values stored.
-   */
-  public abstract DocValues docValues(String field) throws IOException;
+  /** Returns {@link SortedSetDocValues} for this field, or
+   *  null if no {@link SortedSetDocValues} were indexed for
+   *  this field.  The returned instance should only be
+   *  used by a single thread. */
+  public abstract SortedSetDocValues getSortedSetDocValues(String field) throws IOException;
   
-  /**
-   * Returns {@link DocValues} for this field's normalization values.
-   * This method may return null if the field has no norms.
-   */
-  public abstract DocValues normValues(String field) throws IOException;
+  /** Returns a {@link Bits} at the size of <code>reader.maxDoc()</code>, 
+   *  with turned on bits for each docid that does have a value for this field,
+   *  or null if no DocValues were indexed for this field. The
+   *  returned instance should only be used by a single thread */
+  public abstract Bits getDocsWithField(String field) throws IOException;
+
+  /** Returns {@link NumericDocValues} representing norms
+   *  for this field, or null if no {@link NumericDocValues}
+   *  were indexed. The returned instance should only be
+   *  used by a single thread. */
+  public abstract NumericDocValues getNormValues(String field) throws IOException;
 
   /**
    * Get the {@link FieldInfos} describing all fields in

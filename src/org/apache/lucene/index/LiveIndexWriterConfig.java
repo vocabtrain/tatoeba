@@ -98,6 +98,9 @@ public class LiveIndexWriterConfig {
   /** {@link Version} that {@link IndexWriter} should emulate. */
   protected final Version matchVersion;
 
+  /** True if segment flushes should use compound file format */
+  protected volatile boolean useCompoundFile = IndexWriterConfig.DEFAULT_USE_COMPOUND_FILE_SYSTEM;
+
   // used by IndexWriterConfig
   LiveIndexWriterConfig(Analyzer analyzer, Version matchVersion) {
     this.analyzer = analyzer;
@@ -110,12 +113,16 @@ public class LiveIndexWriterConfig {
     termIndexInterval = IndexWriterConfig.DEFAULT_TERM_INDEX_INTERVAL; // TODO: this should be private to the codec, not settable here
     delPolicy = new KeepOnlyLastCommitDeletionPolicy();
     commit = null;
+    useCompoundFile = IndexWriterConfig.DEFAULT_USE_COMPOUND_FILE_SYSTEM;
     openMode = OpenMode.CREATE_OR_APPEND;
     similarity = IndexSearcher.getDefaultSimilarity();
     mergeScheduler = new ConcurrentMergeScheduler();
     writeLockTimeout = IndexWriterConfig.WRITE_LOCK_TIMEOUT;
     indexingChain = DocumentsWriterPerThread.defaultIndexingChain;
     codec = Codec.getDefault();
+    if (codec == null) {
+      throw new NullPointerException();
+    }
     infoStream = InfoStream.getDefault();
     mergePolicy = new TieredMergePolicy();
     flushPolicy = new FlushByRamOrCountsPolicy();
@@ -151,6 +158,7 @@ public class LiveIndexWriterConfig {
     readerPooling = config.getReaderPooling();
     flushPolicy = config.getFlushPolicy();
     perThreadHardLimitMB = config.getRAMPerThreadHardLimitMB();
+    useCompoundFile = config.getUseCompoundFile();
   }
 
   /** Returns the default analyzer to use for indexing documents. */
@@ -193,7 +201,7 @@ public class LiveIndexWriterConfig {
    * <pre class="prettyprint">
    * //customize Lucene41PostingsFormat, passing minBlockSize=50, maxBlockSize=100
    * final PostingsFormat tweakedPostings = new Lucene41PostingsFormat(50, 100);
-   * iwc.setCodec(new Lucene41Codec() {
+   * iwc.setCodec(new Lucene45Codec() {
    *   &#64;Override
    *   public PostingsFormat getPostingsFormatForField(String field) {
    *     if (field.equals("fieldWithTonsOfTerms"))
@@ -222,8 +230,9 @@ public class LiveIndexWriterConfig {
   }
 
   /**
-   * Determines the minimal number of delete terms required before the buffered
-   * in-memory delete terms and queries are applied and flushed.
+   * Determines the maximum number of delete-by-term operations that will be
+   * buffered before both the buffered in-memory delete terms and queries are
+   * applied and flushed.
    * <p>
    * Disabled by default (writer flushes by RAM usage).
    * <p>
@@ -231,7 +240,8 @@ public class LiveIndexWriterConfig {
    * 
    * <p>
    * Takes effect immediately, but only the next time a document is added,
-   * updated or deleted.
+   * updated or deleted. Also, if you only delete-by-query, this setting has no
+   * effect, i.e. delete queries are buffered until the next segment is flushed.
    * 
    * @throws IllegalArgumentException
    *           if maxBufferedDeleteTerms is enabled but smaller than 1
@@ -539,6 +549,33 @@ public class LiveIndexWriterConfig {
     return infoStream;
   }
   
+  /**
+   * Sets if the {@link IndexWriter} should pack newly written segments in a
+   * compound file. Default is <code>true</code>.
+   * <p>
+   * Use <code>false</code> for batch indexing with very large ram buffer
+   * settings.
+   * </p>
+   * <p>
+   * <b>Note: To control compound file usage during segment merges see
+   * {@link MergePolicy#setNoCFSRatio(double)} and
+   * {@link MergePolicy#setMaxCFSSegmentSizeMB(double)}. This setting only
+   * applies to newly created segments.</b>
+   * </p>
+   */
+  public LiveIndexWriterConfig setUseCompoundFile(boolean useCompoundFile) {
+    this.useCompoundFile = useCompoundFile;
+    return this;
+  }
+  
+  /**
+   * Returns <code>true</code> iff the {@link IndexWriter} packs
+   * newly written segments in a compound file. Default is <code>true</code>.
+   */
+  public boolean getUseCompoundFile() {
+    return useCompoundFile ;
+  }
+  
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -564,7 +601,10 @@ public class LiveIndexWriterConfig {
     sb.append("indexerThreadPool=").append(getIndexerThreadPool()).append("\n");
     sb.append("readerPooling=").append(getReaderPooling()).append("\n");
     sb.append("perThreadHardLimitMB=").append(getRAMPerThreadHardLimitMB()).append("\n");
+    sb.append("useCompoundFile=").append(getUseCompoundFile()).append("\n");
     return sb.toString();
   }
+
+
 
 }

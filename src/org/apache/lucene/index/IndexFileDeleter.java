@@ -91,7 +91,7 @@ final class IndexFileDeleter implements Closeable {
 
   /* Holds files we had incref'd from the previous
    * non-commit checkpoint: */
-  private List<Collection<String>> lastFiles = new ArrayList<Collection<String>>();
+  private final List<String> lastFiles = new ArrayList<String>();
 
   /* Commits that the IndexDeletionPolicy have decided to delete: */
   private List<CommitPoint> commitsToDelete = new ArrayList<CommitPoint>();
@@ -123,7 +123,7 @@ final class IndexFileDeleter implements Closeable {
    * @throws IOException if there is a low-level IO error
    */
   public IndexFileDeleter(Directory directory, IndexDeletionPolicy policy, SegmentInfos segmentInfos,
-                          InfoStream infoStream, IndexWriter writer) throws IOException {
+                          InfoStream infoStream, IndexWriter writer, boolean initialIndexExists) throws IOException {
     this.infoStream = infoStream;
     this.writer = writer;
 
@@ -209,7 +209,7 @@ final class IndexFileDeleter implements Closeable {
       }
     }
 
-    if (currentCommitPoint == null && currentSegmentsFile != null) {
+    if (currentCommitPoint == null && currentSegmentsFile != null && initialIndexExists) {
       // We did not in fact see the segments_N file
       // corresponding to the segmentInfos that was passed
       // in.  Yet, it must exist, because our caller holds
@@ -221,7 +221,7 @@ final class IndexFileDeleter implements Closeable {
       try {
         sis.read(directory, currentSegmentsFile);
       } catch (IOException e) {
-        throw new CorruptIndexException("failed to locate current segments_N file");
+        throw new CorruptIndexException("failed to locate current segments_N file \"" + currentSegmentsFile + "\"");
       }
       if (infoStream.isEnabled("IFD")) {
         infoStream.message("IFD", "forced open of current segments file " + segmentInfos.getSegmentsFileName());
@@ -232,7 +232,7 @@ final class IndexFileDeleter implements Closeable {
     }
 
     // We keep commits list in sorted order (oldest to newest):
-    CollectionUtil.mergeSort(commits);
+    CollectionUtil.timSort(commits);
 
     // Now delete anything with ref count at 0.  These are
     // presumably abandoned files eg due to crash of
@@ -250,9 +250,7 @@ final class IndexFileDeleter implements Closeable {
 
     // Finally, give policy a chance to remove things on
     // startup:
-    if (currentSegmentsFile != null) {
-      policy.onInit(commits);
-    }
+    policy.onInit(commits);
 
     // Always protect the incoming segmentInfos since
     // sometime it may not be the most recent commit
@@ -362,14 +360,13 @@ final class IndexFileDeleter implements Closeable {
     refresh(null);
   }
 
+  @Override
   public void close() throws IOException {
     // DecRef old files from the last checkpoint, if any:
     assert locked();
-    int size = lastFiles.size();
-    if (size > 0) {
-      for(int i=0;i<size;i++) {
-        decRef(lastFiles.get(i));
-      }
+
+    if (!lastFiles.isEmpty()) {
+      decRef(lastFiles);
       lastFiles.clear();
     }
 
@@ -460,13 +457,11 @@ final class IndexFileDeleter implements Closeable {
       deleteCommits();
     } else {
       // DecRef old files from the last checkpoint, if any:
-      for (Collection<String> lastFile : lastFiles) {
-        decRef(lastFile);
-      }
+      decRef(lastFiles);
       lastFiles.clear();
 
       // Save files so we can decr on next checkpoint/commit:
-      lastFiles.add(segmentInfos.files(directory, false));
+      lastFiles.addAll(segmentInfos.files(directory, false));
     }
     if (infoStream.isEnabled("IFD")) {
       long t1 = System.nanoTime();

@@ -22,8 +22,8 @@ import java.util.Collections;
 
 import org.apache.lucene.codecs.FieldInfosReader;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.DocValues.Type;
 import org.apache.lucene.index.FieldInfo;
+import org.apache.lucene.index.FieldInfo.DocValuesType;
 import org.apache.lucene.index.FieldInfos;
 import org.apache.lucene.index.IndexFileNames;
 import org.apache.lucene.index.IndexFormatTooNewException;
@@ -57,7 +57,7 @@ class Lucene3xFieldInfosReader extends FieldInfosReader {
   static final byte OMIT_POSITIONS = -128;
 
   @Override
-  public FieldInfos read(Directory directory, String segmentName, IOContext iocontext) throws IOException {
+  public FieldInfos read(Directory directory, String segmentName, String segmentSuffix, IOContext iocontext) throws IOException {
     final String fileName = IndexFileNames.segmentFileName(segmentName, "", FIELD_INFOS_EXTENSION);
     IndexInput input = directory.openInput(fileName, iocontext);
     
@@ -105,7 +105,7 @@ class Lucene3xFieldInfosReader extends FieldInfosReader {
           storePayloads = false;
         }
         infos[i] = new FieldInfo(name, isIndexed, fieldNumber, storeTermVector, 
-          omitNorms, storePayloads, indexOptions, null, isIndexed && !omitNorms? Type.FIXED_INTS_8 : null, Collections.<String,String>emptyMap());
+          omitNorms, storePayloads, indexOptions, null, isIndexed && !omitNorms? DocValuesType.NUMERIC : null, Collections.<String,String>emptyMap());
       }
 
       if (input.getFilePointer() != input.length()) {

@@ -26,8 +26,7 @@ import org.apache.lucene.search.similarities.Similarity;
  */
 final class TermScorer extends Scorer {
   private final DocsEnum docsEnum;
-  private final Similarity.ExactSimScorer docScorer;
-  private final int docFreq;
+  private final Similarity.SimScorer docScorer;
   
   /**
    * Construct a <code>TermScorer</code>.
@@ -37,16 +36,13 @@ final class TermScorer extends Scorer {
    * @param td
    *          An iterator over the documents matching the <code>Term</code>.
    * @param docScorer
-   *          The </code>Similarity.ExactSimScorer</code> implementation 
+   *          The </code>Similarity.SimScorer</code> implementation 
    *          to be used for score computations.
-   * @param docFreq
-   *          per-segment docFreq of this term
    */
-  TermScorer(Weight weight, DocsEnum td, Similarity.ExactSimScorer docScorer, int docFreq) {
+  TermScorer(Weight weight, DocsEnum td, Similarity.SimScorer docScorer) {
     super(weight);
     this.docScorer = docScorer;
     this.docsEnum = td;
-    this.docFreq = docFreq;
   }
 
   @Override
@@ -88,22 +84,13 @@ final class TermScorer extends Scorer {
   public int advance(int target) throws IOException {
     return docsEnum.advance(target);
   }
+  
+  @Override
+  public long cost() {
+    return docsEnum.cost();
+  }
 
   /** Returns a string representation of this <code>TermScorer</code>. */
   @Override
   public String toString() { return "scorer(" + weight + ")"; }
-
-  // TODO: benchmark if the specialized conjunction really benefits
-  // from this, or if instead its from sorting by docFreq, or both
-
-  DocsEnum getDocsEnum() {
-    return docsEnum;
-  }
-  
-  // TODO: generalize something like this for scorers?
-  // even this is just an estimation...
-  
-  int getDocFreq() {
-    return docFreq;
-  }
 }

@@ -33,6 +33,7 @@ final class ExactPhraseScorer extends Scorer {
   private final int[] gens = new int[CHUNK];
 
   boolean noDocs;
+  private final long cost;
 
   private final static class ChunkState {
     final DocsAndPositionsEnum posEnum;
@@ -55,16 +56,19 @@ final class ExactPhraseScorer extends Scorer {
   private int docID = -1;
   private int freq;
 
-  private final Similarity.ExactSimScorer docScorer;
+  private final Similarity.SimScorer docScorer;
   
   ExactPhraseScorer(Weight weight, PhraseQuery.PostingsAndFreq[] postings,
-                    Similarity.ExactSimScorer docScorer) throws IOException {
+                    Similarity.SimScorer docScorer) throws IOException {
     super(weight);
     this.docScorer = docScorer;
 
     chunkStates = new ChunkState[postings.length];
 
     endMinus1 = postings.length-1;
+    
+    // min(cost)
+    cost = postings[0].postings.cost();
 
     for(int i=0;i<postings.length;i++) {
 
@@ -314,5 +318,10 @@ final class ExactPhraseScorer extends Scorer {
     }
 
     return freq;
+  }
+
+  @Override
+  public long cost() {
+    return cost;
   }
 }

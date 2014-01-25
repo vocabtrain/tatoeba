@@ -276,13 +276,13 @@ public class BlockTreeTermsReader extends FieldsProducer {
    */
   public static class Stats {
     /** How many nodes in the index FST. */
-    public int indexNodeCount;
+    public long indexNodeCount;
 
     /** How many arcs in the index FST. */
-    public int indexArcCount;
+    public long indexArcCount;
 
     /** Byte size of the index. */
-    public int indexNumBytes;
+    public long indexNumBytes;
 
     /** Total number of terms in the field. */
     public long totalTermCount;
@@ -506,6 +506,11 @@ public class BlockTreeTermsReader extends FieldsProducer {
     }
 
     @Override
+    public boolean hasFreqs() {
+      return fieldInfo.getIndexOptions().compareTo(IndexOptions.DOCS_AND_FREQS) >= 0;
+    }
+
+    @Override
     public boolean hasOffsets() {
       return fieldInfo.getIndexOptions().compareTo(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS) >= 0;
     }
@@ -551,6 +556,11 @@ public class BlockTreeTermsReader extends FieldsProducer {
         throw new IllegalArgumentException("please use CompiledAutomaton.getTermsEnum instead");
       }
       return new IntersectEnum(compiled, startTerm);
+    }
+    
+    /** Returns approximate RAM bytes used */
+    public long ramBytesUsed() {
+      return ((index!=null)? index.sizeInBytes() : 0);
     }
     
     // NOTE: cannot seek!
@@ -833,7 +843,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
         if (index == null) {
           fstReader = null;
         } else {
-          fstReader = index.getBytesReader(0);
+          fstReader = index.getBytesReader();
         }
 
         // TODO: if the automaton is "smallish" we really
@@ -1222,7 +1232,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
       }
 
       @Override
-      public boolean seekExact(BytesRef text, boolean useCache) {
+      public boolean seekExact(BytesRef text) {
         throw new UnsupportedOperationException();
       }
 
@@ -1237,7 +1247,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
       }
 
       @Override
-      public SeekStatus seekCeil(BytesRef text, boolean useCache) {
+      public SeekStatus seekCeil(BytesRef text) {
         throw new UnsupportedOperationException();
       }
     }
@@ -1277,7 +1287,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
         if (index == null) {
           fstReader = null;
         } else {
-          fstReader = index.getBytesReader(0);
+          fstReader = index.getBytesReader();
         }
 
         // Init w/ root block; don't use index since it may
@@ -1499,7 +1509,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
       }
 
       @Override
-      public boolean seekExact(final BytesRef target, final boolean useCache) throws IOException {
+      public boolean seekExact(final BytesRef target) throws IOException {
 
         if (index == null) {
           throw new IllegalStateException("terms index was not loaded");
@@ -1713,7 +1723,6 @@ public class BlockTreeTermsReader extends FieldsProducer {
             if (arc.output != NO_OUTPUT) {
               output = fstOutputs.add(output, arc.output);
             }
-
             // if (DEBUG) {
             //   System.out.println("    index: follow label=" + toHex(target.bytes[target.offset + targetUpto]&0xff) + " arc.output=" + arc.output + " arc.nfo=" + arc.nextFinalOutput);
             // }
@@ -1760,7 +1769,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
       }
 
       @Override
-      public SeekStatus seekCeil(final BytesRef target, final boolean useCache) throws IOException {
+      public SeekStatus seekCeil(final BytesRef target) throws IOException {
         if (index == null) {
           throw new IllegalStateException("terms index was not loaded");
         }
@@ -2096,7 +2105,7 @@ public class BlockTreeTermsReader extends FieldsProducer {
           // this method catches up all internal state so next()
           // works properly:
           //if (DEBUG) System.out.println("  re-seek to pending term=" + term.utf8ToString() + " " + term);
-          final boolean result = seekExact(term, false);
+          final boolean result = seekExact(term);
           assert result;
         }
 
@@ -2935,5 +2944,14 @@ public class BlockTreeTermsReader extends FieldsProducer {
         }
       }
     }
+  }
+
+  @Override
+  public long ramBytesUsed() {
+    long sizeInByes = ((postingsReader!=null) ? postingsReader.ramBytesUsed() : 0);
+    for(FieldReader reader : fields.values()) {
+      sizeInByes += reader.ramBytesUsed();
+    }
+    return sizeInByes;
   }
 }

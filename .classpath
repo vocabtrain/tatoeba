@@ -5,9 +5,10 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/acra-4.2.3.jar"/>
-	<classpathentry kind="lib" path="libs/lucene-analyzers-common-4.1.0.jar"/>
-	<classpathentry kind="lib" path="libs/lucene-queryparser-4.1.0.jar"/>
-	<classpathentry kind="lib" path="libs/lucene-analyzers-kuromoji-4.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-analyzers-common-4.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-analyzers-kuromoji-4.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-codecs-4.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/lucene-queryparser-4.6.0.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>

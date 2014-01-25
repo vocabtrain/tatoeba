@@ -20,7 +20,6 @@ package org.apache.lucene.codecs;
 import java.util.Set;
 import java.util.ServiceLoader; // javadocs
 
-import org.apache.lucene.codecs.lucene41.Lucene41Codec;
 import org.apache.lucene.index.IndexWriterConfig; // javadocs
 import org.apache.lucene.util.NamedSPILoader;
 
@@ -65,7 +64,7 @@ public abstract class Codec implements NamedSPILoader.NamedSPI {
   
   /** Encodes/decodes postings */
   public abstract PostingsFormat postingsFormat();
-  
+
   /** Encodes/decodes docvalues */
   public abstract DocValuesFormat docValuesFormat();
   
@@ -83,20 +82,18 @@ public abstract class Codec implements NamedSPILoader.NamedSPI {
   
   /** Encodes/decodes document normalization values */
   public abstract NormsFormat normsFormat();
-  
+
   /** Encodes/decodes live docs */
   public abstract LiveDocsFormat liveDocsFormat();
   
   /** looks up a codec by name */
   public static Codec forName(String name) {
-    /*if (loader == null) {
+    if (loader == null) {
       throw new IllegalStateException("You called Codec.forName() before all Codecs could be initialized. "+
           "This likely happens if you call it from a Codec's ctor.");
     }
-    return loader.lookup(name);*/
-	return _codec;
+    return loader.lookup(name);
   }
-  private final static Lucene41Codec _codec = new Lucene41Codec();
   
   /** returns a list of all available codec names */
   public static Set<String> availableCodecs() {
@@ -122,7 +119,7 @@ public abstract class Codec implements NamedSPILoader.NamedSPI {
     loader.reload(classloader);
   }
   
-  private static Codec defaultCodec = Codec.forName("Lucene41");
+  private static Codec defaultCodec = Codec.forName("Lucene46");
   
   /** expert: returns the default codec used for newly created
    *  {@link IndexWriterConfig}s.

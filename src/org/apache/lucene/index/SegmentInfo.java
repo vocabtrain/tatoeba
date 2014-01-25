@@ -18,7 +18,6 @@ package org.apache.lucene.index;
  */
 
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,12 +57,12 @@ public final class SegmentInfo {
 
   private boolean isCompoundFile;
 
-  private volatile long sizeInBytes = -1;         // total byte size of all files (computed on demand)
-
   private Codec codec;
 
   private Map<String,String> diagnostics;
   
+  /** @deprecated not used anymore */
+  @Deprecated
   private Map<String,String> attributes;
 
   // Tracks the Lucene version this segment was created with, since 3.1. Null
@@ -82,6 +81,16 @@ public final class SegmentInfo {
   public Map<String, String> getDiagnostics() {
     return diagnostics;
   }
+  
+  /**
+   * Construct a new complete SegmentInfo instance from input.
+   * <p>Note: this is public only to allow access from
+   * the codecs package.</p>
+   */
+  public SegmentInfo(Directory dir, String version, String name, int docCount, 
+      boolean isCompoundFile, Codec codec, Map<String,String> diagnostics) {
+    this(dir, version, name, docCount, isCompoundFile, codec, diagnostics, null);
+  }
 
   /**
    * Construct a new complete SegmentInfo instance from input.
@@ -99,25 +108,6 @@ public final class SegmentInfo {
     this.codec = codec;
     this.diagnostics = diagnostics;
     this.attributes = attributes;
-  }
-
-  /**
-   * Returns total size in bytes of all of files used by
-   * this segment.  Note that this will not include any live
-   * docs for the segment; to include that use {@link
-   * SegmentInfoPerCommit#sizeInBytes()} instead.
-   * <p><b>NOTE:</b> This value is not correct for 3.0 segments
-   * that have shared docstores. To get the correct value, upgrade!
-   */
-  public long sizeInBytes() throws IOException {
-    if (sizeInBytes == -1) {
-      long sum = 0;
-      for (final String fileName : files()) {
-        sum += dir.fileLength(fileName);
-      }
-      sizeInBytes = sum;
-    }
-    return sizeInBytes;
   }
 
   /**
@@ -150,7 +140,7 @@ public final class SegmentInfo {
   public void setCodec(Codec codec) {
     assert this.codec == null;
     if (codec == null) {
-      throw new IllegalArgumentException("segmentCodecs must be non-null");
+      throw new IllegalArgumentException("codec must be non-null");
     }
     this.codec = codec;
   }
@@ -201,7 +191,6 @@ public final class SegmentInfo {
    *  left off when there are no deletions).</p>
    */
   public String toString(Directory dir, int delCount) {
-
     StringBuilder s = new StringBuilder();
     s.append(name).append('(').append(version == null ? "?" : version).append(')').append(':');
     char cfs = getUseCompoundFile() ? 'c' : 'C';
@@ -265,7 +254,6 @@ public final class SegmentInfo {
   public void setFiles(Set<String> files) {
     checkFileNames(files);
     setFiles = files;
-    sizeInBytes = -1;
   }
 
   /** Add these files to the set of files written for this
@@ -273,7 +261,6 @@ public final class SegmentInfo {
   public void addFiles(Collection<String> files) {
     checkFileNames(files);
     setFiles.addAll(files);
-    sizeInBytes = -1;
   }
 
   /** Add this file to the set of files written for this
@@ -281,7 +268,6 @@ public final class SegmentInfo {
   public void addFile(String file) {
     checkFileNames(Collections.singleton(file));
     setFiles.add(file);
-    sizeInBytes = -1;
   }
   
   private void checkFileNames(Collection<String> files) {
@@ -296,7 +282,10 @@ public final class SegmentInfo {
     
   /**
    * Get a codec attribute value, or null if it does not exist
+   * 
+   * @deprecated no longer supported
    */
+  @Deprecated
   public String getAttribute(String key) {
     if (attributes == null) {
       return null;
@@ -308,13 +297,16 @@ public final class SegmentInfo {
   /**
    * Puts a codec attribute value.
    * <p>
-   * This is a key-value mapping for the field that the codec can use
-   * to store additional metadata, and will be available to the codec
-   * when reading the segment via {@link #getAttribute(String)}
+   * This is a key-value mapping for the field that the codec can use to store
+   * additional metadata, and will be available to the codec when reading the
+   * segment via {@link #getAttribute(String)}
    * <p>
-   * If a value already exists for the field, it will be replaced with 
-   * the new value.
+   * If a value already exists for the field, it will be replaced with the new
+   * value.
+   * 
+   * @deprecated no longer supported
    */
+  @Deprecated
   public String putAttribute(String key, String value) {
     if (attributes == null) {
       attributes = new HashMap<String,String>();
@@ -326,7 +318,10 @@ public final class SegmentInfo {
    * Returns the internal codec attributes map.
    *
    * @return internal codec attributes map. May be null if no mappings exist.
+   * 
+   * @deprecated no longer supported
    */
+  @Deprecated
   public Map<String,String> attributes() {
     return attributes;
   }

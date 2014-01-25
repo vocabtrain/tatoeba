@@ -599,6 +599,11 @@ public final class Lucene41PostingsReader extends PostingsReaderBase {
         return nextDoc();
       }
     }
+    
+    @Override
+    public long cost() {
+      return docFreq;
+    }
   }
 
 
@@ -1009,6 +1014,11 @@ public final class Lucene41PostingsReader extends PostingsReaderBase {
     @Override
     public BytesRef getPayload() {
       return null;
+    }
+    
+    @Override
+    public long cost() {
+      return docFreq;
     }
   }
 
@@ -1588,5 +1598,16 @@ public final class Lucene41PostingsReader extends PostingsReaderBase {
         return payload;
       }
     }
+    
+    @Override
+    public long cost() {
+      return docFreq;
+    }
   }
+
+  @Override
+  public long ramBytesUsed() {
+    return 0;
+  }
+
 }

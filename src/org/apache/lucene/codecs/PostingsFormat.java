@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.apache.lucene.codecs.lucene41.Lucene41PostingsFormat;
 import org.apache.lucene.codecs.perfield.PerFieldPostingsFormat; // javadocs
 import org.apache.lucene.index.SegmentWriteState;
 import org.apache.lucene.index.SegmentReadState;
@@ -93,15 +92,14 @@ public abstract class PostingsFormat implements NamedSPILoader.NamedSPI {
   }
   
   /** looks up a format by name */
-  public static PostingsFormat forName(String name) {/*
+  public static PostingsFormat forName(String name) {
     if (loader == null) {
       throw new IllegalStateException("You called PostingsFormat.forName() before all formats could be initialized. "+
           "This likely happens if you call it from a PostingsFormat's ctor.");
     }
-    return loader.lookup(name);*/
-    return _format;
+    return loader.lookup(name);
   }
-  private final static Lucene41PostingsFormat _format = new Lucene41PostingsFormat();
+  
   /** returns a list of all available format names */
   public static Set<String> availablePostingsFormats() {
     if (loader == null) {

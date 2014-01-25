@@ -17,14 +17,15 @@ package org.apache.lucene.index;
  * limitations under the License.
  */
 
-import org.apache.lucene.util.AttributeSource;
-import org.apache.lucene.util.Bits;
-import org.apache.lucene.util.BytesRef;
-import org.apache.lucene.util.automaton.CompiledAutomaton;
-
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Iterator;
+
+import org.apache.lucene.search.CachingWrapperFilter;
+import org.apache.lucene.search.FieldCache;
+import org.apache.lucene.util.AttributeSource;
+import org.apache.lucene.util.Bits;
+import org.apache.lucene.util.BytesRef;
 
 /**  A <code>FilterAtomicReader</code> contains another AtomicReader, which it
  * uses as its basic source of data, possibly transforming the data along the
@@ -34,6 +35,15 @@ import java.util.Iterator;
  * contained index reader. Subclasses of <code>FilterAtomicReader</code> may
  * further override some of these methods and may also provide additional
  * methods and fields.
+ * <p><b>NOTE</b>: If you override {@link #getLiveDocs()}, you will likely need
+ * to override {@link #numDocs()} as well and vice-versa.
+ * <p><b>NOTE</b>: If this {@link FilterAtomicReader} does not change the
+ * content the contained reader, you could consider overriding
+ * {@link #getCoreCacheKey()} so that {@link FieldCache} and
+ * {@link CachingWrapperFilter} share the same entries for this atomic reader
+ * and the wrapped one. {@link #getCombinedCoreAndDeletesKey()} could be
+ * overridden as well if the {@link #getLiveDocs() live docs} are not changed
+ * either.
  */
 public class FilterAtomicReader extends AtomicReader {
 
@@ -65,15 +75,13 @@ public class FilterAtomicReader extends AtomicReader {
     public int size() {
       return in.size();
     }
-
-    @Override
-    public long getUniqueTermCount() throws IOException {
-      return in.getUniqueTermCount();
-    }
   }
 
-  /** Base class for filtering {@link Terms}
-   *  implementations. */
+  /** Base class for filtering {@link Terms} implementations.
+   * <p><b>NOTE</b>: If the order of terms and documents is not changed, and if
+   * these terms are going to be intersected with automata, you could consider
+   * overriding {@link #intersect} for better performance.
+   */
   public static class FilterTerms extends Terms {
     /** The underlying Terms instance. */
     protected final Terms in;
@@ -90,9 +98,9 @@ public class FilterAtomicReader extends AtomicReader {
     public TermsEnum iterator(TermsEnum reuse) throws IOException {
       return in.iterator(reuse);
     }
-
+    
     @Override
-    public Comparator<BytesRef> getComparator() throws IOException {
+    public Comparator<BytesRef> getComparator() {
       return in.getComparator();
     }
 
@@ -115,10 +123,10 @@ public class FilterAtomicReader extends AtomicReader {
     public int getDocCount() throws IOException {
       return in.getDocCount();
     }
-    
+
     @Override
-    public TermsEnum intersect(CompiledAutomaton automaton, BytesRef bytes) throws java.io.IOException {
-      return in.intersect(automaton, bytes);
+    public boolean hasFreqs() {
+      return in.hasFreqs();
     }
 
     @Override
@@ -149,13 +157,13 @@ public class FilterAtomicReader extends AtomicReader {
     public FilterTermsEnum(TermsEnum in) { this.in = in; }
 
     @Override
-    public boolean seekExact(BytesRef text, boolean useCache) throws IOException {
-      return in.seekExact(text, useCache);
+    public AttributeSource attributes() {
+      return in.attributes();
     }
 
     @Override
-    public SeekStatus seekCeil(BytesRef text, boolean useCache) throws IOException {
-      return in.seekCeil(text, useCache);
+    public SeekStatus seekCeil(BytesRef text) throws IOException {
+      return in.seekCeil(text);
     }
 
     @Override
@@ -202,21 +210,6 @@ public class FilterAtomicReader extends AtomicReader {
     public Comparator<BytesRef> getComparator() {
       return in.getComparator();
     }
-
-    @Override
-    public void seekExact(BytesRef term, TermState state) throws IOException {
-      in.seekExact(term, state);
-    }
-
-    @Override
-    public TermState termState() throws IOException {
-      return in.termState();
-    }
-    
-    @Override
-    public AttributeSource attributes() {
-      return in.attributes();
-    }
   }
 
   /** Base class for filtering {@link DocsEnum} implementations. */
@@ -230,6 +223,11 @@ public class FilterAtomicReader extends AtomicReader {
      */
     public FilterDocsEnum(DocsEnum in) {
       this.in = in;
+    }
+
+    @Override
+    public AttributeSource attributes() {
+      return in.attributes();
     }
 
     @Override
@@ -251,10 +249,10 @@ public class FilterAtomicReader extends AtomicReader {
     public int advance(int target) throws IOException {
       return in.advance(target);
     }
-    
+
     @Override
-    public AttributeSource attributes() {
-      return in.attributes();
+    public long cost() {
+      return in.cost();
     }
   }
 
@@ -269,6 +267,11 @@ public class FilterAtomicReader extends AtomicReader {
      */
     public FilterDocsAndPositionsEnum(DocsAndPositionsEnum in) {
       this.in = in;
+    }
+
+    @Override
+    public AttributeSource attributes() {
+      return in.attributes();
     }
 
     @Override
@@ -312,8 +315,8 @@ public class FilterAtomicReader extends AtomicReader {
     }
     
     @Override
-    public AttributeSource attributes() {
-      return in.attributes();
+    public long cost() {
+      return in.cost();
     }
   }
 
@@ -368,12 +371,6 @@ public class FilterAtomicReader extends AtomicReader {
   }
 
   @Override
-  public boolean hasDeletions() {
-    ensureOpen();
-    return in.hasDeletions();
-  }
-
-  @Override
   protected void doClose() throws IOException {
     in.close();
   }
@@ -382,24 +379,6 @@ public class FilterAtomicReader extends AtomicReader {
   public Fields fields() throws IOException {
     ensureOpen();
     return in.fields();
-  }
-
-  /** {@inheritDoc}
-   * <p>If the subclass of FilteredIndexReader modifies the
-   *  contents (but not liveDocs) of the index, you must override this
-   *  method to provide a different key. */
-  @Override
-  public Object getCoreCacheKey() {
-    return in.getCoreCacheKey();
-  }
-
-  /** {@inheritDoc}
-   * <p>If the subclass of FilteredIndexReader modifies the
-   *  liveDocs, you must override this
-   *  method to provide a different key. */
-  @Override
-  public Object getCombinedCoreAndDeletesKey() {
-    return in.getCombinedCoreAndDeletesKey();
   }
 
   @Override
@@ -411,14 +390,39 @@ public class FilterAtomicReader extends AtomicReader {
   }
 
   @Override
-  public DocValues docValues(String field) throws IOException {
+  public NumericDocValues getNumericDocValues(String field) throws IOException {
     ensureOpen();
-    return in.docValues(field);
+    return in.getNumericDocValues(field);
   }
   
   @Override
-  public DocValues normValues(String field) throws IOException {
+  public BinaryDocValues getBinaryDocValues(String field) throws IOException {
     ensureOpen();
-    return in.normValues(field);
+    return in.getBinaryDocValues(field);
   }
+
+  @Override
+  public SortedDocValues getSortedDocValues(String field) throws IOException {
+    ensureOpen();
+    return in.getSortedDocValues(field);
+  }
+
+  @Override
+  public SortedSetDocValues getSortedSetDocValues(String field) throws IOException {
+    ensureOpen();
+    return in.getSortedSetDocValues(field);
+  }
+
+  @Override
+  public NumericDocValues getNormValues(String field) throws IOException {
+    ensureOpen();
+    return in.getNormValues(field);
+  }
+
+  @Override
+  public Bits getDocsWithField(String field) throws IOException {
+    ensureOpen();
+    return in.getDocsWithField(field);
+  }
+
 }

@@ -17,16 +17,12 @@ package org.apache.lucene.util;
  * limitations under the License.
  */
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.ServiceConfigurationError;
-
-import org.apache.lucene.codecs.lucene41.Lucene41Codec;
 
 /**
  * Helper class for loading named SPIs from classpath (e.g. Codec, PostingsFormat).
@@ -43,6 +39,11 @@ public final class NamedSPILoader<S extends NamedSPILoader.NamedSPI> implements 
   
   public NamedSPILoader(Class<S> clazz, ClassLoader classloader) {
     this.clazz = clazz;
+    // if clazz' classloader is not a parent of the given one, we scan clazz's classloader, too:
+    final ClassLoader clazzClassloader = clazz.getClassLoader();
+    if (clazzClassloader != null && !SPIClassIterator.isParentClassLoader(clazzClassloader, classloader)) {
+      reload(clazzClassloader);
+    }
     reload(classloader);
   }
   
@@ -57,8 +58,7 @@ public final class NamedSPILoader<S extends NamedSPILoader.NamedSPI> implements 
    * <p><em>This method is expensive and should only be called for discovery
    * of new service providers on the given classpath/classloader!</em>
    */
-  @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-public void reload(ClassLoader classloader) {
+  public synchronized void reload(ClassLoader classloader) {
     final LinkedHashMap<String,S> services = new LinkedHashMap<String,S>(this.services);
     final SPIClassIterator<S> loader = SPIClassIterator.get(clazz, classloader);
     while (loader.hasNext()) {

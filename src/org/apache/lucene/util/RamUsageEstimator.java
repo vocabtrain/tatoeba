@@ -17,7 +17,6 @@ package org.apache.lucene.util;
  * limitations under the License.
  */
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
 import java.lang.reflect.*;
@@ -213,11 +212,6 @@ public final class RamUsageEstimator {
     // Try to get the object alignment (the default seems to be 8 on Hotspot, 
     // regardless of the architecture).
     int objectAlignment = 8;
-    try {
-      throw new Exception();
-    } catch (Exception e) {
-      // Ignore.
-    }
 
     NUM_BYTES_OBJECT_ALIGNMENT = objectAlignment;
 

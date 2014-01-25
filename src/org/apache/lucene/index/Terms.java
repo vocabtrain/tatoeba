@@ -80,7 +80,7 @@ public abstract class Terms {
    *  if there are no terms.  This method may be invoked
    *  many times; it's best to cache a single instance &
    *  reuse it. */
-  public abstract Comparator<BytesRef> getComparator() throws IOException;
+  public abstract Comparator<BytesRef> getComparator();
 
   /** Returns the number of terms for this field, or -1 if this 
    *  measure isn't stored by the codec. Note that, just like 
@@ -109,7 +109,11 @@ public abstract class Terms {
    *  measures, this measure does not take deleted documents
    *  into account. */
   public abstract int getDocCount() throws IOException;
-  
+
+  /** Returns true if documents in this field store
+   *  per-document term frequency ({@link DocsEnum#freq}). */
+  public abstract boolean hasFreqs();
+
   /** Returns true if documents in this field store offsets. */
   public abstract boolean hasOffsets();
   

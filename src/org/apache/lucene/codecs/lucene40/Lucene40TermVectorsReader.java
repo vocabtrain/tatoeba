@@ -368,6 +368,11 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
     }
 
     @Override
+    public boolean hasFreqs() {
+      return true;
+    }
+
+    @Override
     public boolean hasOffsets() {
       return storeOffsets;
     }
@@ -422,7 +427,7 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
       this.storePayloads = storePayloads;
       nextTerm = 0;
       tvf.seek(tvfFPStart);
-      tvfFP = 1+tvfFPStart;
+      tvfFP = tvfFPStart;
       positions = null;
       startOffsets = null;
       endOffsets = null;
@@ -433,7 +438,7 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
 
     // NOTE: slow!  (linear scan)
     @Override
-    public SeekStatus seekCeil(BytesRef text, boolean useCache)
+    public SeekStatus seekCeil(BytesRef text)
       throws IOException {
       if (nextTerm != 0) {
         final int cmp = text.compareTo(term);
@@ -605,12 +610,8 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
     }
 
     @Override
-    public int advance(int target) {
-      if (!didNext && target == 0) {
-        return nextDoc();
-      } else {
-        return (doc = NO_MORE_DOCS);
-      }
+    public int advance(int target) throws IOException {
+      return slowAdvance(target);
     }
 
     public void reset(Bits liveDocs, int freq) {
@@ -618,6 +619,11 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
       this.freq = freq;
       this.doc = -1;
       didNext = false;
+    }
+    
+    @Override
+    public long cost() {
+      return 1;
     }
   }
 
@@ -659,12 +665,8 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
     }
 
     @Override
-    public int advance(int target) {
-      if (!didNext && target == 0) {
-        return nextDoc();
-      } else {
-        return (doc = NO_MORE_DOCS);
-      }
+    public int advance(int target) throws IOException {
+      return slowAdvance(target);
     }
 
     public void reset(Bits liveDocs, int[] positions, int[] startOffsets, int[] endOffsets, int[] payloadLengths, byte[] payloadBytes) {
@@ -726,6 +728,11 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
         return endOffsets[nextPos-1];
       }
     }
+    
+    @Override
+    public long cost() {
+      return 1;
+    }
   }
 
   @Override
@@ -760,6 +767,11 @@ public class Lucene40TermVectorsReader extends TermVectorsReader implements Clos
     }
     
     return new Lucene40TermVectorsReader(fieldInfos, cloneTvx, cloneTvd, cloneTvf, size, numTotalDocs);
+  }
+
+  @Override
+  public long ramBytesUsed() {
+    return 0;
   }
 }
 
